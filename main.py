@@ -1,19 +1,37 @@
-import pandas as pd
+import pandas as pd 
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 #import createpdf
-planilhabruta = 'respostabruta.csv'
-planilhagabarito = 'gabarito.csv'
+planilhabruta = 'dados_corrigidos - SIMULINHO 2024 - dados_corrigidos (1).csv'
+planilhagabarito = 'Gabarito Simulinho 2024 - vale - Página1 (1).csv'
 df = pd.read_csv(planilhabruta)
+
+
+
 gabarito = pd.read_csv(planilhagabarito)
+
+
 
 n_linhas = df.shape[0]
 n_colunas = df.shape[1]
 
-pdf_pages = PdfPages("sera.pdf")  # Cria um objeto PDF
+pdf_pages = PdfPages("vni.pdf")  # Cria um objeto PDF
 data_per = {}
 textColor = {
+    'matematica': 'green',
+    'portugues': '#B8AA5E',
+    'fisica': 'red',
+    'quimica': 'blue',
+    'historia': 'orange',
+    'biologia': 'purple',
+    'geografia': 'cyan',
+    'ingles': 'pink',
+    'interdisciplinar': 'brown',
+    'filosofia-sociologia': 'gray'  
+}
+
+mediaDeAcertos = {
     'matematica': 'green',
     'portugues': '#B8AA5E',
     'fisica': 'red',
@@ -32,15 +50,15 @@ textCorrector = {
     'fisica': 'Física',
     'quimica': 'Química',
     'historia': 'História',
-    'biologia': 'Geografia', #Na planilha ta invertido. A questão 41 na planilha é Biologia,quando
-    'geografia': 'Biologia', #na verdade na prova a quest 41 é Geografia
+    'biologia': 'Biologia', #Na planilha ta invertido. A questão 41 na planilha é Biologia,quando
+    'geografia': 'Geografia', #na verdade na prova a quest 41 é Geografia
     'ingles': 'Inglês',
     'interdisciplinar': 'Interdisciplinar',
     'filosofia-sociologia': 'Filosofia-Sociologia'  
 }
 
 fig_count = 0  # Contador de figuras por página
-for coluna in range(3, 63):
+for coluna in range(3, 53):
     a = 0
     b = 0
     c = 0
@@ -83,11 +101,11 @@ for coluna in range(3, 63):
     questaoStr = questoes_em_porcentagem
     data_per[f'Questão {questaoStr}'] = coluna
     data = {
-        f'a|{a}': a,
-        f'b|{b}': b,
-        f'c|{c}': c,
-        f'd|{d}': d,
-        f'e|{e}': e,
+        f'A|{a}': a,
+        f'B|{b}': b,
+        f'C|{c}': c,
+        f'D|{d}': d,
+        f'E|{e}': e,
     }
 
     print(f'Questão:{coluna-2} Disciplina:{disciplina} Gabarito: {gabaritoC}\n A: {a}\n B: {b}\n C: {c}\n D: {d}\n E: {e} ')
@@ -100,12 +118,17 @@ for coluna in range(3, 63):
         fig_count = 0
 
     # Criando o gráfico de barras
+    # Criando o gráfico de barras
     axs[fig_count].bar(courses, values, color=textColor[disciplina], width=0.4)
     axs[fig_count].set_xlabel(f"Resposta correta: {gabaritoC}", fontsize=11)
     axs[fig_count].set_ylabel(f"Quantidade de vezes assinalada", fontsize=10)
     axs[fig_count].set_title(f"Questão: {coluna-2} Disciplina: {textCorrector[disciplina]}", fontsize=11)
     if gabaritoC != 'Anulada':
         axs[fig_count].text(0.52, 1.06, f" Erraram: {erraram}% | Acertaram: {acertaram}% ", ha='center', transform=axs[fig_count].transAxes, fontsize=11)
+
+    # Definindo a escala do eixo y entre 5 e 80
+    axs[fig_count].set_ylim(5, 80)
+
     
     fig_count += 1
     if fig_count == 2:
