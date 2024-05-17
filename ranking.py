@@ -34,7 +34,6 @@ def corrigir():
     
     df = pd.DataFrame.from_dict(ranking_alunos_ordenado, orient='index')
 
-    # Adicionar uma coluna com o CPF (supondo que os CPFs estão na primeira coluna dos dados brutos)
     df['cpf'] = list(ranking_alunos_ordenado.keys())[0::]
 
     # Reordenar as colunas
